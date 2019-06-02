@@ -25,14 +25,14 @@ var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // Initial Params
-var chosenXAxis = "hair_length";
+var chosenXAxis = "poverty";
 
 // function used for updating x-scale var upon click on axis label
-function xScale(hairData, chosenXAxis) {
+function xScale(demographicData, chosenXAxis) {
   // create scales
   var xLinearScale = d3.scaleLinear()
-    .domain([d3.min(hairData, d => d[chosenXAxis]) * 0.8,
-      d3.max(hairData, d => d[chosenXAxis]) * 1.2
+    .domain([d3.min(demographicData, d => d[chosenXAxis]) * 0.8,
+      d3.max(demographicData, d => d[chosenXAxis]) * 1.2
     ])
     .range([0, width]);
 
@@ -65,8 +65,8 @@ function renderCircles(circlesGroup, newXScale, chosenXaxis) {
 // function used for updating circles group with new tooltip
 function updateToolTip(chosenXAxis, circlesGroup) {
 
-  if (chosenXAxis === "hair_length") {
-    var label = "Hair Length:";
+  if (chosenXAxis === "poverty") {
+    var label = "In Poverty %";
   }
   else {
     var label = "# of Albums:";
@@ -93,22 +93,22 @@ function updateToolTip(chosenXAxis, circlesGroup) {
 }
 
 // Retrieve data from the CSV file and execute everything below
-d3.csv("hairData.csv", function(err, hairData) {
+d3.csv("/assets/data/data.csv", function(err, demographicData) {
   if (err) throw err;
 
   // parse data
-  hairData.forEach(function(data) {
-    data.hair_length = +data.hair_length;
-    data.num_hits = +data.num_hits;
-    data.num_albums = +data.num_albums;
+  demographicData.forEach(function(data) {
+    data.poverty = +data.poverty;
+    data.obesity = +data.obesity;
+    data.age = +data.age;
   });
 
   // xLinearScale function above csv import
-  var xLinearScale = xScale(hairData, chosenXAxis);
+  var xLinearScale = xScale(demographicData, chosenXAxis);
 
   // Create y scale function
   var yLinearScale = d3.scaleLinear()
-    .domain([0, d3.max(hairData, d => d.num_hits)])
+    .domain([0, d3.max(demographicData, d => d.obesity)])
     .range([height, 0]);
 
   // Create initial axis functions
@@ -127,11 +127,11 @@ d3.csv("hairData.csv", function(err, hairData) {
 
   // append initial circles
   var circlesGroup = chartGroup.selectAll("circle")
-    .data(hairData)
+    .data(demographicData)
     .enter()
     .append("circle")
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
-    .attr("cy", d => yLinearScale(d.num_hits))
+    .attr("cy", d => yLinearScale(d.obesity))
     .attr("r", 20)
     .attr("fill", "pink")
     .attr("opacity", ".5");
@@ -143,14 +143,14 @@ d3.csv("hairData.csv", function(err, hairData) {
   var hairLengthLabel = labelsGroup.append("text")
     .attr("x", 0)
     .attr("y", 20)
-    .attr("value", "hair_length") // value to grab for event listener
+    .attr("value", "poverty") // value to grab for event listener
     .classed("active", true)
     .text("Hair Metal Ban Hair Length (inches)");
 
   var albumsLabel = labelsGroup.append("text")
     .attr("x", 0)
     .attr("y", 40)
-    .attr("value", "num_albums") // value to grab for event listener
+    .attr("value", "age") // value to grab for event listener
     .classed("inactive", true)
     .text("# of Albums Released");
 
@@ -180,7 +180,7 @@ d3.csv("hairData.csv", function(err, hairData) {
 
         // functions here found above csv import
         // updates x scale for new data
-        xLinearScale = xScale(hairData, chosenXAxis);
+        xLinearScale = xScale(demographicData, chosenXAxis);
 
         // updates x axis with transition
         xAxis = renderAxes(xLinearScale, xAxis);
@@ -192,7 +192,7 @@ d3.csv("hairData.csv", function(err, hairData) {
         circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
 
         // changes classes to change bold text
-        if (chosenXAxis === "num_albums") {
+        if (chosenXAxis === "age") {
           albumsLabel
             .classed("active", true)
             .classed("inactive", false);
