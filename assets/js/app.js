@@ -105,7 +105,7 @@ d3.csv("../assets/data/data.csv").then(function(demographicData) {
 
  /**
   * 
-  * @param {*} data 
+  * @param {DemographicData} data 
   */ 
 function BuildCharts(demographicData){
 //  if (err) throw err;
@@ -140,7 +140,8 @@ function BuildCharts(demographicData){
     .call(bottomAxis);
 
   // append y axis
-  chartGroup.append("g")
+  var yAxis = chartGroup.append("g")
+    .classed("y-axis", true)
     .call(leftAxis);
 
   // append initial circles
@@ -180,34 +181,40 @@ function BuildCharts(demographicData){
     .text("Household Income (Median)");
 
   // append y axis
-  chartGroup.append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("y", 0 - margin.left)
-    .attr("x", 0 - (height / 2))
-    .attr("dy", "1em")
-    .classed("axis-text", true)
-    .text("Obese %");
+  // Create group for  3 y- axis labels
+    var labelsGroupY = chartGroup.append("g")
+    // .attr("transform", `translate(-40,${height / 2})rotate(270)`);
+  // chartGroup.append("text")
+  //   .attr("transform", "rotate(-90)")
+  //   .attr("y", 0 - margin.left)
+  //   .attr("x", 0 - (height / 2))
+  //   .attr("dy", "1em")
+  //   .classed("axis-text", true)
+  //   .text("Obese %");
 
-    var obeseLabel = labelsGroup.append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("x", 0 - (height / 2))
-    .attr("y", 0 - margin.left)
-    .attr("dy", "1em")
-    .classed("axis-text", true)
+  var obeseLabel = labelsGroupY.append("text")
+    // .attr("transform", "rotate(-90)")
+    .attr("transform", `translate(-80,${height / 2})rotate(270)`)
+    // .attr("x", 0 - (height / 2))
+    // .attr("y", 0 - margin.left)
+    .attr("value", "obesity")
+    .classed("active", true)
     .text("Obesity %");
 
-  var smokeLabel = labelsGroup.append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("x", 0 - (height / 2))
-    .attr("y", 0 - margin.left + 20)
+  var smokeLabel = labelsGroupY.append("text")
+    // .attr("transform", "rotate(-90)")
+    .attr("transform", `translate(-60,${height / 2})rotate(270)`)
+    // .attr("x", 0 - (height / 2))
+    // .attr("y", 0 - margin.left + 20)
     .attr("value", "smoke") // value to grab for event listener
     .classed("inactive", true)
     .text("Smoke (%)");
 
-  var healthcareLabel = labelsGroup.append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("x", 0 - (height / 2))
-    .attr("y", 0 - margin.left + 40)
+  var healthcareLabel = labelsGroupY.append("text")
+  .attr("transform", `translate(-40,${height / 2})rotate(270)`)
+    // .attr("transform", "rotate(-90)")
+    // .attr("x", 0 - (height / 2))
+    // .attr("y", 0 - margin.left + 40)
     .attr("value", "healthcare") // value to grab for event listener
     .classed("inactive", true)
     .text("Lacks  Healthcare (%)");
@@ -276,5 +283,67 @@ function BuildCharts(demographicData){
         }
       }
     });
+
+  // y axis labels event listener
+  labelsGroupY.selectAll("text")
+  .on("click", function() {
+    // get value of selection
+    var value = d3.select(this).attr("value");
+    if (value !== chosenYAxis) {
+
+      // replaces chosenYAxis with value
+      chosenYAxis = value;
+
+      console.log(chosenYAxis)
+
+      // functions here found above csv import
+      // updates y scale for new data
+      yLinearScale = xScale(demographicData, chosenYAxis);
+
+      // updates y axis with transition
+      yAxis = renderAxes(yLinearScale, yAxis);
+
+      // updates circles with new y values
+      circlesGroup = renderCircles(circlesGroup, yLinearScale, chosenYAxis);
+
+      // updates tooltips with new info
+      circlesGroup = updateToolTip(chosenYAxis, circlesGroup);
+
+      // changes classes to change bold text
+      if (chosenYAxis === "obesity") {
+        obeseLabel
+          .classed("active", true)
+          .classed("inactive", false);
+        smokeLabel
+          .classed("active", false)
+          .classed("inactive", true);
+        healthcareLabel
+          .classed("active", false)
+          .classed("inactive", true);
+      }
+      else if (chosenYAxis === "smoke") {
+        obeseLabel
+          .classed("active", false)
+          .classed("inactive", true);
+        smokeLabel
+          .classed("active", true)
+          .classed("inactive", false);
+        healthcareLabel
+          .classed("active", false)
+          .classed("inactive", true);  
+      }
+      else {
+        obeseLabel
+          .classed("active", false)
+          .classed("inactive", true);
+        smokeLabel
+          .classed("active", false)
+          .classed("inactive", true);
+        healthcareLabel
+          .classed("active", true)
+          .classed("inactive", false);  
+      }
+    }
+  });
 
 }
