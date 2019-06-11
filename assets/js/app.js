@@ -86,6 +86,15 @@ function renderCircles(circlesGroup, newXScale, chosenXaxis) {
   return circlesGroup;
 }
 
+function renderCirclesy(circlesGroup, newYScale, chosenYaxis) {
+
+  circlesGroup.transition()
+    .duration(1000)
+    .attr("cy", d => newYScale(d[chosenYAxis]));
+
+  return circlesGroup;
+}
+
 
 
 
@@ -193,6 +202,14 @@ function BuildCharts(demographicData){
     .attr("r", 10)
     .attr("fill", "Royalblue")
     .attr("opacity", ".5");
+
+    // circlesGroup.selectAll("text")
+    // .data(demographicData)
+    // .enter()
+    // .append("text")
+    // .text(function (d) {
+    //     return d.abbr;
+    // })    
 
   // Create group for  3 x- axis labels
   var labelsGroup = chartGroup.append("g")
@@ -345,7 +362,7 @@ function BuildCharts(demographicData){
       yAxis = renderyAxes(yLinearScale, yAxis);
 
       // updates circles with new y values
-      circlesGroup = renderCircles(circlesGroup, yLinearScale, chosenYAxis);
+      circlesGroup = renderCirclesy(circlesGroup, yLinearScale, chosenYAxis);
 
       // updates tooltips with new info
       circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
