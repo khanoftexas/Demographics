@@ -79,9 +79,21 @@ function renderyAxes(newYScale, yAxis) {
 // new circles
 function renderCircles(circlesGroup, newXScale, chosenXaxis) {
 
+  // circlesGroup.selectAll("text")
+  // .data(demographicData)
+  // .enter()
+  // .append("text")
+  // .text(function (d) {
+  //   return d.abbr;
+  //   })
+  //   .attr("font-size", "12px")
+  //   .attr("text-anchor", "middle")
+  //   .attr("class","stateText");
+
   circlesGroup.transition()
     .duration(1000)
-    .attr("cx", d => newXScale(d[chosenXAxis]));
+    .attr("cx", d => newXScale(d[chosenXAxis]))
+  ;
 
   return circlesGroup;
 }
@@ -94,9 +106,36 @@ function renderCirclesy(circlesGroup, newYScale, chosenYaxis) {
 
   return circlesGroup;
 }
+function createstatelabels(circlesGroup){
+    // create state labels
 
+    console.log(demographicData.abbr)
+    circlesGroup.selectAll("text")
+        .data(demographicData)
+        .enter()
+        .append("text")
+        .text(function (d) {
+            return d.abbr;
+        })
+        // .attr("x", function (d) {
+        //     return xScale(d[chosenXAxis]);
+        // })
+        // .attr("y", function (d) {
+        //     return yScale(d[chosenYAxis]);
+        // })
+        .attr("font-size", "12px")
+        .attr("text-anchor", "middle")
+        .attr("class","stateText")
 
-
+        // display tooltip on click
+        // .on("mouseover", function (d) {
+        //     toolTip.show(d);
+        // })
+        // // hide tooltip on mouseout
+        // .on("mouseout", function (d, i) {
+        //     toolTip.hide(d);
+        // })
+      }
 
 // function used for updating circles group with new tooltip
 function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
@@ -123,12 +162,10 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
 
   var toolTip = d3.tip()
     .attr("class", "tooltip")
-    // .offset([40, -60])
+    .offset([80, -60])
     .html(function(d) {
       return (`${d.state}<br>${label} ${d[chosenXAxis]}<br>${labely} ${d[chosenYAxis]}`)
-      // .style("left", d3.select(this).attr("cx") + "px")     
-      // .style("top", d3.select(this).attr("cy") + "px");
-    });
+     });
 
   circlesGroup.call(toolTip);
 
@@ -144,7 +181,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
 }
 
 // Retrieve data from the CSV file and execute everything below
-d3.csv("../assets/data/data.csv").then(function(demographicData) {
+d3.csv("../assets/data/data.csv", function(demographicData) {
     // Visualize the data
     BuildCharts(demographicData);
   });
@@ -159,6 +196,7 @@ function BuildCharts(demographicData){
 
   // parse data
   demographicData.forEach(function(data) {
+    // data.abbr = data.abbr;
     data.poverty = +data.poverty;
     data.obesity = +data.obesity;
     data.age = +data.age;
@@ -203,6 +241,24 @@ function BuildCharts(demographicData){
     .attr("fill", "Royalblue")
     .attr("opacity", ".5");
 
+  
+  // var stateabbr=  chartGroup.selectAll("text")
+  //       .data(demographicData)
+  //       .enter()
+  //       .append("text")
+  //       .text(function (d) {
+  //           return d.abbr;
+  //       })
+  //       // .attr("x", function (d) {
+  //       //     return xScale(d[chosenXAxis]);
+  //       // })
+  //       // .attr("y", function (d) {
+  //       //     return yScale(d[chosenYAxis]);
+  //       // })
+  //       .attr("font-size", "12px")
+  //       .attr("text-anchor", "middle")
+  //       .attr("class","stateText")
+
     // circlesGroup.selectAll("text")
     // .data(demographicData)
     // .enter()
@@ -210,6 +266,9 @@ function BuildCharts(demographicData){
     // .text(function (d) {
     //     return d.abbr;
     // })    
+    // circlesGroup.append("text")
+    // .attr("dx", function(d){return -20})
+    // .text(function(d){return d.abbr})
 
   // Create group for  3 x- axis labels
   var labelsGroup = chartGroup.append("g")
@@ -301,6 +360,7 @@ function BuildCharts(demographicData){
         // updates circles with new x values
         circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis);
 
+
         // updates tooltips with new info
         circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
@@ -363,6 +423,7 @@ function BuildCharts(demographicData){
 
       // updates circles with new y values
       circlesGroup = renderCirclesy(circlesGroup, yLinearScale, chosenYAxis);
+      
 
       // updates tooltips with new info
       circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
