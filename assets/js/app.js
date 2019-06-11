@@ -84,23 +84,6 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYA
     .attr("cx", d => newXScale(d[chosenXAxis]))
     .attr("cy", d => newYScale(d[chosenYAxis]));
   ;
-  // chartGroup.selectAll(".stateText")
-  //   .data(demographicData)
-  //   .enter()
-  //   .append("text")
-  //   .text(function (d) {
-  //       return d.abbr;
-  //   })
-  //   .attr("x", function (d) {
-  //       return xLinearScale(d[chosenXAxis]);
-  //   })
-  //   .attr("y", function (d) {
-  //       return yLinearScale(d[chosenYAxis]);
-  //   })
-  //   .attr("font-size", "9px")
-  //   .attr("text-anchor", "middle")
-  //   .attr("class",".stateText");
-
   return circlesGroup;
 }
 
@@ -218,7 +201,7 @@ function BuildCharts(demographicData){
     .attr("fill", "Royalblue")
     .attr("opacity", ".5");
 
-    chartGroup.selectAll(".stateText")
+    var textGroup = chartGroup.selectAll(".stateText")
     .data(demographicData)
     .enter()
     .append("text")
