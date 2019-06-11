@@ -79,21 +79,26 @@ function renderyAxes(newYScale, yAxis) {
 // new circles
 function renderCircles(circlesGroup, newXScale, chosenXaxis) {
 
-  // circlesGroup.selectAll("text")
-  // .data(demographicData)
-  // .enter()
-  // .append("text")
-  // .text(function (d) {
-  //   return d.abbr;
-  //   })
-  //   .attr("font-size", "12px")
-  //   .attr("text-anchor", "middle")
-  //   .attr("class","stateText");
-
   circlesGroup.transition()
     .duration(1000)
     .attr("cx", d => newXScale(d[chosenXAxis]))
   ;
+  // chartGroup.selectAll(".stateText")
+  //   .data(demographicData)
+  //   .enter()
+  //   .append("text")
+  //   .text(function (d) {
+  //       return d.abbr;
+  //   })
+  //   .attr("x", function (d) {
+  //       return xLinearScale(d[chosenXAxis]);
+  //   })
+  //   .attr("y", function (d) {
+  //       return yLinearScale(d[chosenYAxis]);
+  //   })
+  //   .attr("font-size", "9px")
+  //   .attr("text-anchor", "middle")
+  //   .attr("class",".stateText");
 
   return circlesGroup;
 }
@@ -104,38 +109,25 @@ function renderCirclesy(circlesGroup, newYScale, chosenYaxis) {
     .duration(1000)
     .attr("cy", d => newYScale(d[chosenYAxis]));
 
+    // chartGroup.selectAll(".stateText")
+    // .data(demographicData)
+    // .enter()
+    // .append("text")
+    // .text(function (d) {
+    //     return d.abbr;
+    // })
+    // .attr("x", function (d) {
+    //     return xLinearScale(d[chosenXAxis]);
+    // })
+    // .attr("y", function (d) {
+    //     return yLinearScale(d[chosenYAxis]);
+    // })
+    // .attr("font-size", "9px")
+    // .attr("text-anchor", "middle")
+    // .attr("class",".stateText");
   return circlesGroup;
 }
-function createstatelabels(circlesGroup){
-    // create state labels
 
-    console.log(demographicData.abbr)
-    circlesGroup.selectAll("text")
-        .data(demographicData)
-        .enter()
-        .append("text")
-        .text(function (d) {
-            return d.abbr;
-        })
-        // .attr("x", function (d) {
-        //     return xScale(d[chosenXAxis]);
-        // })
-        // .attr("y", function (d) {
-        //     return yScale(d[chosenYAxis]);
-        // })
-        .attr("font-size", "12px")
-        .attr("text-anchor", "middle")
-        .attr("class","stateText")
-
-        // display tooltip on click
-        // .on("mouseover", function (d) {
-        //     toolTip.show(d);
-        // })
-        // // hide tooltip on mouseout
-        // .on("mouseout", function (d, i) {
-        //     toolTip.hide(d);
-        // })
-      }
 
 // function used for updating circles group with new tooltip
 function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
@@ -241,34 +233,25 @@ function BuildCharts(demographicData){
     .attr("fill", "Royalblue")
     .attr("opacity", ".5");
 
-  
-  // var stateabbr=  chartGroup.selectAll("text")
-  //       .data(demographicData)
-  //       .enter()
-  //       .append("text")
-  //       .text(function (d) {
-  //           return d.abbr;
-  //       })
-  //       // .attr("x", function (d) {
-  //       //     return xScale(d[chosenXAxis]);
-  //       // })
-  //       // .attr("y", function (d) {
-  //       //     return yScale(d[chosenYAxis]);
-  //       // })
-  //       .attr("font-size", "12px")
-  //       .attr("text-anchor", "middle")
-  //       .attr("class","stateText")
+    chartGroup.selectAll(".stateText")
+    .data(demographicData)
+    .enter()
+    .append("text")
+    .text(function (d) {
+        return d.abbr;
+    })
+    .attr("x", function (d) {
+        return xLinearScale(d[chosenXAxis]);
+    })
+    .attr("y", function (d) {
+        return yLinearScale(d[chosenYAxis]);
+    })
+    .attr("font-size", "9px")
+    .attr("text-anchor", "middle")
+    .attr("class",".stateText");
 
-    // circlesGroup.selectAll("text")
-    // .data(demographicData)
-    // .enter()
-    // .append("text")
-    // .text(function (d) {
-    //     return d.abbr;
-    // })    
-    // circlesGroup.append("text")
-    // .attr("dx", function(d){return -20})
-    // .text(function(d){return d.abbr})
+  
+  
 
   // Create group for  3 x- axis labels
   var labelsGroup = chartGroup.append("g")
@@ -341,6 +324,7 @@ function BuildCharts(demographicData){
   labelsGroup.selectAll("text")
     .on("click", function() {
       // get value of selection
+      d3.select(".stateText").html("");
       var value = d3.select(this).attr("value");
       if (value !== chosenXAxis) {
 
@@ -405,6 +389,7 @@ function BuildCharts(demographicData){
   labelsGroupY.selectAll("text")
   .on("click", function() {
     // get value of selection
+    d3.select(".stateText").html("");
     var value = d3.select(this).attr("value");
     if (value !== chosenYAxis) {
 
