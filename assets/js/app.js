@@ -77,11 +77,12 @@ function renderyAxes(newYScale, yAxis) {
 
 // function used for updating circles group with a transition to
 // new circles
-function renderCircles(circlesGroup, newXScale, chosenXaxis) {
+function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
 
   circlesGroup.transition()
     .duration(1000)
     .attr("cx", d => newXScale(d[chosenXAxis]))
+    .attr("cy", d => newYScale(d[chosenYAxis]));
   ;
   // chartGroup.selectAll(".stateText")
   //   .data(demographicData)
@@ -103,31 +104,15 @@ function renderCircles(circlesGroup, newXScale, chosenXaxis) {
   return circlesGroup;
 }
 
-function renderCirclesy(circlesGroup, newYScale, chosenYaxis) {
+function renderText(textGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
 
-  circlesGroup.transition()
-    .duration(1000)
-    .attr("cy", d => newYScale(d[chosenYAxis]));
+    textGroup.transition()
+        .duration(1000)
+        .attr("x", d => newXScale(d[chosenXAxis]))
+        .attr("y", d => newYScale(d[chosenYAxis]));
 
-    // chartGroup.selectAll(".stateText")
-    // .data(demographicData)
-    // .enter()
-    // .append("text")
-    // .text(function (d) {
-    //     return d.abbr;
-    // })
-    // .attr("x", function (d) {
-    //     return xLinearScale(d[chosenXAxis]);
-    // })
-    // .attr("y", function (d) {
-    //     return yLinearScale(d[chosenYAxis]);
-    // })
-    // .attr("font-size", "9px")
-    // .attr("text-anchor", "middle")
-    // .attr("class",".stateText");
-  return circlesGroup;
+    return textGroup;
 }
-
 
 // function used for updating circles group with new tooltip
 function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
@@ -342,8 +327,10 @@ function BuildCharts(demographicData){
         xAxis = renderAxes(xLinearScale, xAxis);
 
         // updates circles with new x values
-        circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis);
-
+        circlesGroup = renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis);
+          
+        //update text with new x values
+        textGroup = renderText(textGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
 
         // updates tooltips with new info
         circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
@@ -407,9 +394,11 @@ function BuildCharts(demographicData){
       yAxis = renderyAxes(yLinearScale, yAxis);
 
       // updates circles with new y values
-      circlesGroup = renderCirclesy(circlesGroup, yLinearScale, chosenYAxis);
+      circlesGroup = renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis);
       
-
+      //update text with new y values
+      textGroup = renderText(textGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
+      
       // updates tooltips with new info
       circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
