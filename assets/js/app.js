@@ -48,7 +48,7 @@ function yScale(demographicData, chosenYAxis) {
       d3.max(demographicData, d => d[chosenYAxis]) * 1.2
     ])
     .range([height, 0]);
- console.log(yLinearScale);
+//  console.log(yLinearScale);
   return yLinearScale;
 
 }
@@ -299,8 +299,8 @@ function BuildCharts(demographicData){
         // replaces chosenXAxis with value
         chosenXAxis = value;
 
-        console.log(chosenYAxis);
-        console.log(chosenXAxis);
+        // console.log(chosenYAxis);
+        // console.log(chosenXAxis);
 
         // functions here found above csv import
         // updates x scale for new data
@@ -366,8 +366,8 @@ function BuildCharts(demographicData){
       // replaces chosenYAxis with value
       chosenYAxis = value;
 
-      console.log(chosenYAxis);
-      console.log(chosenXAxis);
+      // console.log(chosenYAxis);
+      // console.log(chosenXAxis);
 
       // functions here found above csv import
       // updates y scale for new data
