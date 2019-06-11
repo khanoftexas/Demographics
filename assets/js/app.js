@@ -292,7 +292,7 @@ function BuildCharts(demographicData){
   labelsGroup.selectAll("text")
     .on("click", function() {
       // get value of selection
-      d3.select(".stateText").html("");
+      // d3.select(".stateText").html("");
       var value = d3.select(this).attr("value");
       if (value !== chosenXAxis) {
 
@@ -310,7 +310,7 @@ function BuildCharts(demographicData){
         xAxis = renderAxes(xLinearScale, xAxis);
 
         // updates circles with new x values
-        circlesGroup = renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis);
+        circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
           
         //update text with new x values
         textGroup = renderText(textGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
@@ -359,7 +359,7 @@ function BuildCharts(demographicData){
   labelsGroupY.selectAll("text")
   .on("click", function() {
     // get value of selection
-    d3.select(".stateText").html("");
+    // d3.select(".stateText").html("");
     var value = d3.select(this).attr("value");
     if (value !== chosenYAxis) {
 
@@ -377,7 +377,7 @@ function BuildCharts(demographicData){
       yAxis = renderyAxes(yLinearScale, yAxis);
 
       // updates circles with new y values
-      circlesGroup = renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis);
+      circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
       
       //update text with new y values
       textGroup = renderText(textGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
